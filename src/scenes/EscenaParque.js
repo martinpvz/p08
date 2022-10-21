@@ -12,6 +12,7 @@ class EscenaParque extends Phaser.Scene{
         this.load.path = './assets/';      
         this.load.image('fondopark2', 'fondopark2.jpg');
         this.load.image('chihuahua', 'chihuahua3.png');
+        this.load.image('abeja', 'bee.png');
         this.load.image('huesito', 'bone.png');
         this.load.image('hidrante', 'hidrante.png');
         this.load.atlas('monedas', 'moneda/monedas.png', 'moneda/monedas_atlas.json');
@@ -71,6 +72,17 @@ class EscenaParque extends Phaser.Scene{
                 }
             });
 
+        this.abejas = this.physics.add.group({
+            key: 'abeja',
+            repeat: 1,
+            setXY: {
+                x: 100,
+                y: 450,
+                stepY: -60,
+                stepX:300
+                }
+            });
+
         this.grupo.children.iterate( (hueso) => {
                 hueso.setScale(0.1);
                 hueso.setAngle(45);
@@ -94,6 +106,15 @@ class EscenaParque extends Phaser.Scene{
                 hidrante.setCollideWorldBounds(true);
             } );
 
+        this.abejas.children.iterate( (abejas) => {
+            abejas.setScale(0.2);
+            abejas.body.setAllowGravity(false);
+            // hidrante.setVelocity(10,0);
+            // hidrante.setBounce(1, 0);
+            // hidrante.setFriction(10);
+            abejas.setCollideWorldBounds(true);
+        } );
+
         // this.grupo.playAnimation('moneda');
 
         this.add.tween({
@@ -103,6 +124,26 @@ class EscenaParque extends Phaser.Scene{
             duration: 500,
             repeat: -1,
             easy: 'Power1'
+            });
+
+    
+        this.add.tween({
+            targets: this.abejas.getChildren(),
+            x: 1200,
+            yoyo: true,
+            duration: 8000,
+            repeat: -1,
+            easy: 'Power1',
+            onYoyo: () => {
+                this.abejas.children.iterate( (abeja) => {
+                    abeja.flipX = 1;
+                    } );
+                },
+            onRepeat: () => {
+                this.abejas.children.iterate( (abeja) => {
+                    abeja.flipX = 0;
+                    } );
+                }
             });
         
         
@@ -121,9 +162,20 @@ class EscenaParque extends Phaser.Scene{
         function choque(hueso, chihuahua) {
             // moneda.kill();
             // this.grupo.getChildren()[1].destroy();
-            this.tomarhueso.play();
+            //this.tomarhueso.play();
             hueso.disableBody(true, true); //De aqui saque disableBodyhttp://phaser.io/tutorials/making-your-first-phaser-3-game/part9
             // this.grupo.destroy();
+            chihuahua.clearTint()
+
+        }
+
+        function choqueAbeja(hueso, chihuahua) {
+            // moneda.kill();
+            // this.grupo.getChildren()[1].destroy();
+            //this.tomarhueso.play();
+            //hueso.disableBody(true, true); //De aqui saque disableBodyhttp://phaser.io/tutorials/making-your-first-phaser-3-game/part9
+            // this.grupo.destroy();
+            hueso.setTint(0xff0000)
 
         }
 
@@ -152,7 +204,9 @@ class EscenaParque extends Phaser.Scene{
         }
         this.physics.add.collider(this.grupo, this.grupo1);
         this.physics.add.collider(this.grupo1, this.hidrante);
+        this.physics.add.collider(this.grupo1, this.abejas);
         this.physics.collide(this.grupo, this.grupo1, choque);
+        this.physics.collide(this.grupo1, this.abejas, choqueAbeja);
 
     }
     
