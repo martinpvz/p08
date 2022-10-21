@@ -12,18 +12,25 @@ class Inicio extends Phaser.Scene{
         this.load.path = './assets/';
         this.load.image('fondo', 'fondo.png');  
         this.load.image('nube1','nube.png'); 
-        this.load.image(['play','cofre','conf','logo']);
+        this.load.image(['play','info','conf','logo','sound','noSound','infoCuadro']);
         this.load.audio('pasar', ['./pop.mp3']);
         this.load.audio('InicioM', ['./InicioM2.mp3']);
     }
 
     create(){
+        //Banderas
+        this.click1 = false;
+        this.click2 = false;
+        this.noSound = false;
         //Imagen de fondo
         this.fondo = this.add.image(800,370, 'fondo').scaleX=1.25;
         this.logo = this.add.image(750,100, 'logo').setScale(.25).setDepth(4);
         this.play = this.add.image(750,300, 'play').setScale(.25).setInteractive().setDepth(4);
         this.config = this.add.image(200,620, 'conf').setScale(.25).setInteractive().setDepth(4);
-        this.cofre = this.add.image(1300,620, 'cofre').setScale(.25).setInteractive().setDepth(4);
+        this.info = this.add.image(1300,620, 'info').setScale(.25).setInteractive().setDepth(4);
+        this.infoCuadro = this.add.image(1300,380, 'infoCuadro').setScale(.42).setDepth(4).setAlpha(0);
+        this.soundIcon = this.add.image(300,500, 'sound').setScale(.25).setInteractive().setDepth(4).setAlpha(0);
+        this.noSoundIcon = this.add.image(400,620, 'noSound').setScale(.25).setInteractive().setDepth(4).setAlpha(0);
         // Musica de fondo
         this.mainmenu = this.sound.add('InicioM', {loop:false,volume: 0.8});
         this.mainmenu.play();
@@ -79,17 +86,59 @@ class Inicio extends Phaser.Scene{
         //EVENTOS PARA MOUSE
         this.input.on(eventos.GAMEOBJECT_OVER,(event,gameObject)=>{
             gameObject.setScale(.3);
-            this.pasar.play();
         });
         this.input.on(eventos.GAMEOBJECT_OUT,(event,gameObject)=>{
             gameObject.setScale(.25);
         });
+        this.input.on(eventos.GAMEOBJECT_DOWN,(event,gameObject)=>{
+            if(this.noSound == false){
+                this.pasar.play();
+            }
+        });
         //EVENTO SÓLO PARA PLAY
         this.play.on(eventos.POINTER_DOWN, function () {
             console.log('Se dió click en play');
+            //this.pasar.play();
             this.scene.start("EscenaParque");
             // this.mainmenu.stop();
             this.sound.pauseAll();
+        }, this);
+        //EVENTO SÓLO PARA PLAY
+        this.config.on(eventos.POINTER_DOWN, function () {
+            console.log('Se dió click en config');
+            if(this.click1 == false)
+            {
+                this.click1 = true;
+                this.soundIcon.setAlpha(1);
+                this.noSoundIcon.setAlpha(1);
+                console.log(this.click1)
+            }else{
+                this.click1 = false;
+                this.soundIcon.setAlpha(0);
+                this.noSoundIcon.setAlpha(0);         
+            }
+        }, this);
+        //EVENTO SÓLO PARA INFO
+        this.info.on(eventos.POINTER_DOWN, function () {
+            if(this.click2 == false){
+                this.infoCuadro.setAlpha(1);
+                this.click2 = true;
+            }else{
+                this.infoCuadro.setAlpha(0);
+                this.click2 = false;
+            }
+        }, this);
+        //EVENTO SÓLO PARA SOUND
+        this.soundIcon.on(eventos.POINTER_DOWN, function () {
+            console.log('Se dió click en Sound');
+            this.noSound = false;
+            this.mainmenu.play();
+        }, this);
+        //EVENTO SÓLO PARA NO SOUND
+        this.noSoundIcon.on(eventos.POINTER_DOWN, function () {
+            console.log('Se dió click en noSound');
+            this.noSound = true;
+            this.mainmenu.stop();
         }, this);
     }
 
