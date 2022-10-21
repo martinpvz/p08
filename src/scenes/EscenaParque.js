@@ -12,7 +12,7 @@ class EscenaParque extends Phaser.Scene{
         this.load.path = './assets/';
         //IMÁGENES      
         this.load.image('fondopark2', 'fondopark2.jpg');
-        this.load.image('chihuahua', 'chihuahua3.png');
+        this.load.image('chihuahua', 'chihuahua4.png');
         this.load.image('abeja', 'bee.png');
         this.load.image('huesito', 'bone.png');
         this.load.image('hidrante', 'hidrante.png');
@@ -20,7 +20,6 @@ class EscenaParque extends Phaser.Scene{
         this.load.image('corazon', 'heart.png');
         // AUDIO
         this.load.audio('Parque', ['./Parque2.mp3']);
-        this.load.audio('pasar', ['./pop.mp3']);
         //CONSTANTE DE TECLADO E INPUTS
         const teclado = Phaser.Input.Keyboard.KeyCodes;
         this.d = this.input.keyboard.addKey(teclado.D);
@@ -34,13 +33,12 @@ class EscenaParque extends Phaser.Scene{
         this.fondo = this.add.image(750, 360, 'fondopark2').setScale(2.2).setDepth(0);
         //INSTRUCCION
         this.instrucciones = this.add.image(750, 680, 'instrucciones').setScale(.17).setDepth(4);
-        this.cora= this.add.image(1200, 100, 'corazon').setScale(.5).setDepth(1);
-        this.cora2= this.add.image(1300, 100, 'corazon').setScale(.5).setDepth(1);
-        this.cora3= this.add.image(1400, 100, 'corazon').setScale(.5).setDepth(1);
+        this.cora= this.add.image(1330, 50, 'corazon').setScale(.3).setDepth(1);
+        this.cora2= this.add.image(1380, 50, 'corazon').setScale(.3).setDepth(1);
+        this.cora3= this.add.image(1430, 50, 'corazon').setScale(.3).setDepth(1);
 
         this.parque = this.sound.add('Parque', {loop:false,volume: 0.5});
         this.parque.play();
-        this.tomarhueso = this.sound.add('pasar', {loop:false,volume: 0.8});
         
         this.physics.world.setBounds(0, 0, 1500, 640, true, true, true, true);
 
@@ -59,7 +57,7 @@ class EscenaParque extends Phaser.Scene{
             // repeat: 5,
             setXY: {
                 x: 500,
-                y: 580,
+                y: 590,
                 // stepX: 50
                 },
             });
@@ -92,7 +90,7 @@ class EscenaParque extends Phaser.Scene{
             } );
 
         this.chihuahua.children.iterate( (chihuahua) => {
-                chihuahua.setScale(0.2);
+                chihuahua.setScale(1.2);
                 // chihuahua.body.setAllowGravity(false);
                 chihuahua.setCollideWorldBounds(true);
                 chihuahua.onWorldBounds = true;
@@ -152,6 +150,9 @@ class EscenaParque extends Phaser.Scene{
     update(time, delta) {
         // ESTA FUNCION CREA UN CICLO INFINITO
         var bandera;
+        if(this.abejas.getChildren()[0].y>600){
+            this.abejas.getChildren()[0].disableBody(true,true);
+        }
         function choque(hueso, chihuahua) {
             // moneda.kill();
             // this.huesito.getChildren()[1].destroy();
@@ -162,7 +163,6 @@ class EscenaParque extends Phaser.Scene{
 
         }
         
-
         function choqueAbeja(chihuahua, abeja) {
             chihuahua.setTint(0xff0000);
             // bandera+=1;
