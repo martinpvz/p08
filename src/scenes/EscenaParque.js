@@ -13,9 +13,11 @@ class EscenaParque extends Phaser.Scene{
         //IMÁGENES      
         this.load.image('fondopark2', 'fondopark2.jpg');
         this.load.image('chihuahua', 'chihuahua3.png');
+        this.load.image('abeja', 'bee.png');
         this.load.image('huesito', 'bone.png');
         this.load.image('hidrante', 'hidrante.png');
         this.load.image('instrucciones', 'instrucciones.png');
+        this.load.image('corazon', 'heart.png');
         // AUDIO
         this.load.audio('Parque', ['./Parque2.mp3']);
         this.load.audio('pasar', ['./pop.mp3']);
@@ -28,15 +30,13 @@ class EscenaParque extends Phaser.Scene{
     }
 
     create() {
-        // this.grupo = this.physics.add.staticGroup({
-        // para usar este de arriba hay que comentar setAllowGravity 
         //FONDO
         this.fondo = this.add.image(750, 360, 'fondopark2').setScale(2.2).setDepth(0);
         //INSTRUCCION
         this.instrucciones = this.add.image(750, 680, 'instrucciones').setScale(.17).setDepth(4);
-        // this.chihuahua = this.add.image(300, 580, 'huesito').setScale(1).setDepth(1);
-        // this.chihuahua = this.physics.add.image(300, 580, 'chihuahua').setScale(1).setDepth(1);
-        // this.chihuahua.setAllowGravity(false);
+        this.cora= this.add.image(1200, 100, 'corazon').setScale(.5).setDepth(1);
+        this.cora2= this.add.image(1300, 100, 'corazon').setScale(.5).setDepth(1);
+        this.cora3= this.add.image(1400, 100, 'corazon').setScale(.5).setDepth(1);
 
         this.parque = this.sound.add('Parque', {loop:false,volume: 0.5});
         this.parque.play();
@@ -44,7 +44,7 @@ class EscenaParque extends Phaser.Scene{
         
         this.physics.world.setBounds(0, 0, 1500, 640, true, true, true, true);
 
-        this.grupo = this.physics.add.group({
+        this.huesito = this.physics.add.group({
             key: 'huesito',
             repeat: 5,
             setXY: {
@@ -54,7 +54,7 @@ class EscenaParque extends Phaser.Scene{
                 }
             });
 
-        this.grupo1 = this.physics.add.group({
+        this.chihuahua = this.physics.add.group({
             key: 'chihuahua',
             // repeat: 5,
             setXY: {
@@ -74,12 +74,24 @@ class EscenaParque extends Phaser.Scene{
                 }
             });
 
-        this.grupo.children.iterate( (hueso) => {
+        this.abejas = this.physics.add.group({
+            key: 'abeja',
+            repeat: 1,
+            setXY: {
+                x: 100,
+                y: 450,
+                stepY: -60,
+                stepX:300
+                }
+            });
+
+        this.huesito.children.iterate( (hueso) => {
                 hueso.setScale(0.1);
                 hueso.setAngle(45);
                 hueso.body.setAllowGravity(false);
             } );
-        this.grupo1.children.iterate( (chihuahua) => {
+
+        this.chihuahua.children.iterate( (chihuahua) => {
                 chihuahua.setScale(0.2);
                 // chihuahua.body.setAllowGravity(false);
                 chihuahua.setCollideWorldBounds(true);
@@ -91,41 +103,79 @@ class EscenaParque extends Phaser.Scene{
         this.hidrante.children.iterate( (hidrante) => {
                 hidrante.setScale(0.5);
                 // hidrante.body.setAllowGravity(false);
-                // hidrante.setVelocity(10,0);
-                // hidrante.setBounce(1, 0);
-                // hidrante.setFriction(10);
+                // hidrante.setVelocity(10,10);
+                // hidrante.setBounce(1, 1);
+                // hidrante.setFriction(1);
                 hidrante.setCollideWorldBounds(true);
             } );
 
-        // this.grupo.playAnimation('moneda');
+        this.abejas.children.iterate( (abejas) => {
+            abejas.setScale(0.2);
+            abejas.body.setAllowGravity(false);
+            abejas.setCollideWorldBounds(true);
+        } );
 
         this.add.tween({
-            targets: this.grupo.getChildren(),
-            y: 500,
+            targets: this.huesito.getChildren(),
+            y: 520,
             yoyo: true,
             duration: 500,
             repeat: -1,
             easy: 'Power1'
             });
+
+    
+        this.add.tween({
+            targets: this.abejas.getChildren(),
+            x: 1200,
+            yoyo: true,
+            duration: 8000,
+            repeat: -1,
+            easy: 'Power1',
+            onYoyo: () => {
+                this.abejas.children.iterate( (abeja) => {
+                    abeja.flipX = 1;
+                    } );
+                },
+            onRepeat: () => {
+                this.abejas.children.iterate( (abeja) => {
+                    abeja.flipX = 0;
+                    } );
+                }
+            });
+
         
-        // this.salir.on('down', function () {
-        //     this.scene.start("Inicio");
-        //     // this.mainmenu.stop();
-        //     this.sound.pauseAll();
-        // },this);
-        // this.grupo.getChildren()[1].destroy();
+        // this.bandera=0;
+        // this.huesito.getChildren()[1].destroy();
     }
     
     update(time, delta) {
         // ESTA FUNCION CREA UN CICLO INFINITO
-
+        var bandera;
         function choque(hueso, chihuahua) {
             // moneda.kill();
-            // this.grupo.getChildren()[1].destroy();
-           // this.tomarhueso.play();
-            hueso.disableBody(true, true); //Referencia para disableBody -- http://phaser.io/tutorials/making-your-first-phaser-3-game/part9
-            // this.grupo.destroy();
+            // this.huesito.getChildren()[1].destroy();
+            //this.tomarhueso.play();
+            hueso.disableBody(true, true); //De aqui saque disableBody http://phaser.io/tutorials/making-your-first-phaser-3-game/part9
+            // this.huesito.destroy();
+            chihuahua.clearTint();
 
+        }
+        
+
+        function choqueAbeja(chihuahua, abeja) {
+            chihuahua.setTint(0xff0000);
+            // bandera+=1;
+            // console.log(bandera);
+            // quitarCora();
+        }
+        
+        // if(bandera>0){
+        //     this.cora.setAlpha(0);
+        // }
+
+        function choqueHidrante(chihuahua, hidrante) {
+            chihuahua.clearTint()
         }
 
         if( this.salir.isDown ){
@@ -135,25 +185,29 @@ class EscenaParque extends Phaser.Scene{
         }
 
         if( this.d.isDown ){
-            this.grupo1.children.iterate( (chihuahua) => {
+            this.chihuahua.children.iterate( (chihuahua) => {
                         chihuahua.x += 3;
                         chihuahua.flipX= 0;
             } );
         }
         if( this.a.isDown ){
-            this.grupo1.children.iterate( (chihuahua) => {
+            this.chihuahua.children.iterate( (chihuahua) => {
                         chihuahua.x -= 3;
                         chihuahua.flipX= 1;
             } );
         }
         if( this.saltar.isDown ){
-            this.grupo1.children.iterate( (chihuahua) => {
+            this.chihuahua.children.iterate( (chihuahua) => {
                         chihuahua.y -= 8;
             } );
         }
-        this.physics.add.collider(this.grupo, this.grupo1);
-        this.physics.add.collider(this.grupo1, this.hidrante);
-        this.physics.collide(this.grupo, this.grupo1, choque);
+        this.physics.add.collider(this.huesito, this.chihuahua);
+        this.physics.add.collider(this.chihuahua, this.hidrante);
+        this.physics.add.collider(this.chihuahua, this.abejas);
+        this.physics.collide(this.huesito, this.chihuahua, choque);
+        this.physics.collide(this.chihuahua, this.abejas, choqueAbeja);
+        this.physics.collide(this.chihuahua, this.hidrante, choqueHidrante);
+
     }
     
     
