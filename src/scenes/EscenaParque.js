@@ -207,6 +207,7 @@ class EscenaParque extends Phaser.Scene{
         this.physics.add.collider(this.grupo1, this.hidrante);
         this.physics.add.collider(this.grupo1, this.abejas);
         this.physics.collide(this.grupo, this.grupo1, choque);
+        this.physics.collide(this.grupo1, this.abejas, choqueAbeja);
 
     }
     
