@@ -9,17 +9,17 @@ class EscenaParque extends Phaser.Scene{
         console.log('Escena EscenaParque');
     }
     preload() {
-        this.load.path = './assets/';      
+        this.load.path = './assets/';
+        //IMÁGENES      
         this.load.image('fondopark2', 'fondopark2.jpg');
         this.load.image('chihuahua', 'chihuahua3.png');
         this.load.image('huesito', 'bone.png');
         this.load.image('hidrante', 'hidrante.png');
-        this.load.atlas('monedas', 'moneda/monedas.png', 'moneda/monedas_atlas.json');
-        this.load.animation('monedaAnim','moneda/monedas_anim.json');
+        this.load.image('instrucciones', 'instrucciones.png');
         // AUDIO
-        this.load.audio('Parque', ['./Parque.mp3']);
+        this.load.audio('Parque', ['./Parque2.mp3']);
         this.load.audio('pasar', ['./pop.mp3']);
-
+        //CONSTANTE DE TECLADO E INPUTS
         const teclado = Phaser.Input.Keyboard.KeyCodes;
         this.d = this.input.keyboard.addKey(teclado.D);
         this.a = this.input.keyboard.addKey(teclado.A);
@@ -30,7 +30,10 @@ class EscenaParque extends Phaser.Scene{
     create() {
         // this.grupo = this.physics.add.staticGroup({
         // para usar este de arriba hay que comentar setAllowGravity 
+        //FONDO
         this.fondo = this.add.image(750, 360, 'fondopark2').setScale(2.2).setDepth(0);
+        //INSTRUCCION
+        this.instrucciones = this.add.image(750, 680, 'instrucciones').setScale(.17).setDepth(4);
         // this.chihuahua = this.add.image(300, 580, 'huesito').setScale(1).setDepth(1);
         // this.chihuahua = this.physics.add.image(300, 580, 'chihuahua').setScale(1).setDepth(1);
         // this.chihuahua.setAllowGravity(false);
@@ -105,8 +108,6 @@ class EscenaParque extends Phaser.Scene{
             easy: 'Power1'
             });
         
-        
-
         // this.salir.on('down', function () {
         //     this.scene.start("Inicio");
         //     // this.mainmenu.stop();
@@ -122,7 +123,7 @@ class EscenaParque extends Phaser.Scene{
             // moneda.kill();
             // this.grupo.getChildren()[1].destroy();
            // this.tomarhueso.play();
-            hueso.disableBody(true, true); //De aqui saque disableBodyhttp://phaser.io/tutorials/making-your-first-phaser-3-game/part9
+            hueso.disableBody(true, true); //Referencia para disableBody -- http://phaser.io/tutorials/making-your-first-phaser-3-game/part9
             // this.grupo.destroy();
 
         }
@@ -153,7 +154,6 @@ class EscenaParque extends Phaser.Scene{
         this.physics.add.collider(this.grupo, this.grupo1);
         this.physics.add.collider(this.grupo1, this.hidrante);
         this.physics.collide(this.grupo, this.grupo1, choque);
-
     }
     
     
