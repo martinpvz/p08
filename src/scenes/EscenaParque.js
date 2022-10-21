@@ -121,7 +121,7 @@ class EscenaParque extends Phaser.Scene{
         function choque(hueso, chihuahua) {
             // moneda.kill();
             // this.grupo.getChildren()[1].destroy();
-            this.tomarhueso.play();
+           // this.tomarhueso.play();
             hueso.disableBody(true, true); //De aqui saque disableBodyhttp://phaser.io/tutorials/making-your-first-phaser-3-game/part9
             // this.grupo.destroy();
 
